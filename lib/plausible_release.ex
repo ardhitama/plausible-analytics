@@ -133,7 +133,15 @@ defmodule Plausible.Release do
   defp prepare do
     IO.puts("Loading #{@app}..")
     # Load the code for myapp, but don't start it
-    :ok = Application.load(@app)
+    :ok = case Application.load(@app) do
+      :ok ->
+        :ok
+      {:error, {:already_loaded, _}} ->
+        :ok
+      err ->
+        err
+
+    end
 
     IO.puts("Starting dependencies..")
     # Start apps necessary for executing migrations
